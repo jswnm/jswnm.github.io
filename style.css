@@ -223,3 +223,38 @@ header.alt nav a::after {
     margin-top: 2rem;
   }
 }
+
+.viz-section {
+  width: 100%;
+  max-width: 85%;
+  margin: 0 auto;
+}
+
+.viz-section p {
+  max-width: 100%;
+}
+
+.viz-container {
+  width: 95%;
+  max-width: 1000px;   /* container max width */
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #0b0f1a;
+  border-radius: 18px;
+  box-shadow: 0 0 25px rgba(0,229,255,0.25);
+  overflow: hidden;
+}
+
+/* make SVGs responsive inside the container */
+.viz-container svg {
+  width: 100% !important;
+  height: auto !important;
+}
+
+
+
+
+
+
+
+
