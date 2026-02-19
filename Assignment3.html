@@ -1,30 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <header class="site-header">
-    <div class="header-text">
-      <h1>Joshua Sunwoo Nam</h1>
-      <p>
-        Student at SFU's Interactive Arts & Technology |
-        Content Creator on YouTube: @sunwootech
-      </p>
-
-      <nav>
-        <a href="index.html">About Me</a>
-        <a href="visualizations.html" class="active">Projects</a>
-        <a href="https://github.com/jswnm" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/jswnm/" target="_blank">LinkedIn</a>
-        <a href="https://youtube.com/%40sunwootech" target="_blank">YouTube</a>
-        <a href="assignment3.html">Assignment 3</a>
-      </nav>
-    </div>
-
-    <div class="header-photo">
-      <img src="img/sunwoo glasses png.png" alt="Profile photo">
-    </div>
-
-  </header>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment 3 — Visualizations</title>
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
@@ -34,55 +13,86 @@
     <link rel="stylesheet" href="style.css" />
     <script>
       const options = {
-        config: {
-        },
-        init: (view) => {
-        },
-        view: {
-        renderer: "canvas"
-        },
+        config: {},
+        init: (view) => {},
+        view: { renderer: "canvas" }
       };
 
       vl.register(vega, vegaLite, options);
     </script>
-    <style></style>
   </head>
-    <body>
-        <div class="viz-section">
+  <body>
+    <header class="site-header">
+      <div class="header-text">
+        <h1>Joshua Sunwoo Nam</h1>
+        <p>
+          Student at SFU's Interactive Arts & Technology |
+          Content Creator on YouTube: @sunwootech
+        </p>
 
-            <h1>Video Game Sales Visualization</h1>
+        <nav>
+          <a href="index.html">About Me</a>
+          <a href="visualizations.html" class="active">Projects</a>
+          <a href="https://github.com/jswnm" target="_blank">GitHub</a>
+          <a href="https://www.linkedin.com/in/jswnm/" target="_blank">LinkedIn</a>
+          <a href="https://youtube.com/%40sunwootech" target="_blank">YouTube</a>
+          <a href="assignment3.html">Assignment 3</a>
+        </nav>
+      </div>
 
-            <section>
-              <h2>Dataset Description</h2>
+      <div class="header-photo">
+        <img src="img/sunwoo glasses png.png" alt="Profile photo" />
+      </div>
+    </header>
 
-              <p>
-                This dataset contains historical video game sales data across multiple gaming
-                platforms, genres, publishers, and global regions. Each row represents a
-                video game and records how many millions of units it sold in North America,
-                Europe, Japan, and other regions, along with its total global sales.
-              </p>
+    <div class="viz-section">
+      <section>
+        <h2>Dataset Description</h2>
 
-              <h3>Variables and Data Types</h3>
-              <ul>
-                <li><strong>Name</strong> – Categorical: Title of the video game.</li>
-                <li><strong>Platform</strong> – Categorical: Console/system the game was released on (e.g., Wii, PS2).</li>
-                <li><strong>Year</strong> – Temporal/Ordinal: Release year of the game.</li>
-                <li><strong>Genre</strong> – Categorical: Type of game such as Action, Sports, RPG.</li>
-                <li><strong>Publisher</strong> – Categorical: Company that published the game.</li>
-                <li><strong>NA_Sales, EU_Sales, JP_Sales, Other_Sales</strong> – Quantitative: Regional sales in millions.</li>
-                <li><strong>Global_Sales</strong> – Quantitative: Total worldwide sales.</li>
-              </ul>
+        <p>
+          This dataset contains video game sales data including game titles,
+          platforms, release years, genres, publishers, regional sales, and
+          total global sales.
+        </p>
 
-              <h3>Key Observations</h3>
-              <p>
-                The dataset is highly skewed, meaning that while many games sell small
-                amounts, a small number of blockbuster titles generate extremely high sales.
-                Genres like Action and Sports appear most frequently, and long-lasting
-                platforms such as PlayStation and Nintendo systems contribute significantly
-                to total global sales. This reflects the “hit-driven” nature of the gaming
-                industry where a few successful titles dominate the market.
-              </p>
-            </section>
+        <h3>Variables and Data Types</h3>
+        <ul>
+          <li><strong>Name</strong> – Categorical (Nominal)</li>
+          <li><strong>Platform</strong> – Categorical (Nominal)</li>
+          <li><strong>Year</strong> – Numerical (Discrete / Temporal)</li>
+          <li><strong>Genre</strong> – Categorical (Nominal)</li>
+          <li><strong>Publisher</strong> – Categorical (Nominal)</li>
+          <li><strong>NA_Sales</strong> – Quantitative (Continuous, Ratio)</li>
+          <li><strong>EU_Sales</strong> – Quantitative (Continuous, Ratio)</li>
+          <li><strong>JP_Sales</strong> – Quantitative (Continuous, Ratio)</li>
+          <li><strong>Other_Sales</strong> – Quantitative (Continuous, Ratio)</li>
+          <li><strong>Global_Sales</strong> – Quantitative (Continuous, Ratio)</li>
+        </ul>
+
+        <h3>Key Statistics</h3>
+
+        <p><strong>Central Tendency (Global Sales)</strong></p>
+        <ul>
+          <li><strong>Mean:</strong> 0.5409 million units</li>
+          <li><strong>Median:</strong> 0.17 million units</li>
+          <li><strong>Mode:</strong> 0.02 million units</li>
+        </ul>
+
+        <p><strong>Spread / Variability (Global Sales)</strong></p>
+        <ul>
+          <li><strong>Minimum:</strong> 0.01 million units</li>
+          <li><strong>Maximum:</strong> 82.74 million units</li>
+          <li><strong>Range:</strong> 82.73 million units</li>
+          <li><strong>Standard Deviation:</strong> 1.57</li>
+        </ul>
+
+        <p>
+          The large difference between the mean (0.54) and median (0.17), along with
+          the wide range (82.73), indicates that global sales are highly skewed.
+          Most games sell relatively small amounts, while a few blockbuster titles
+          account for extremely high sales.
+        </p>
+      </section>
 
             <section>
               <h2>Visualization 1: Global Sales by Genre and Platform</h2>
@@ -105,11 +115,6 @@
                 suggesting that successful hardware ecosystems help amplify genre success.
                 This shows how platform adoption and content type reinforce each other.
               </p>
-
-              <p><strong>Design Choice:</strong>
-                A bar chart allows clear comparison of totals while color encoding reveals
-                platform contribution without overwhelming the viewer.
-              </p>
             </section>
 
             <section>
@@ -117,8 +122,8 @@
 
               <p><strong>Questions:</strong></p>
               <ul>
-                <li>How have video game sales changed across different console generations?</li>
-                <li>Do platforms follow predictable life cycles?</li>
+                <li>How does total global sales change over time, and when do major platforms show clear peaks and declines?</li>
+                <li>During a platform’s peak years, which genres are most present (as seen through the tooltip breakdown)?</li>
               </ul>
 
               <div class="viz-section">
@@ -128,25 +133,26 @@
               </div>
 
               <p><strong>Reflection:</strong>
-                Sales patterns show clear rises and declines corresponding to console
-                generations. Platforms peak several years after release and then taper off
-                as newer systems enter the market, illustrating the cyclical innovation
-                pattern of the gaming industry.
+                The stacked area pattern highlights platform “life cycles”: platforms rise, peak, and then fade as newer systems enter.
+                The tooltip reveals that genre composition varies across years, suggesting that platform success is not only about the
+                hardware generation but also about what genres were selling strongly during that time period.
               </p>
 
-              <p><strong>Design Choice:</strong>
-                A line chart is ideal for showing change over time and highlighting growth,
-                peak, and decline phases.
+              <p><strong>Design choices:</strong>
+                I chose a stacked area chart because it emphasizes change over time and shows how different platforms
+                contribute to the total sales each year. Stacking makes overall market volume visible while color separates platform
+                contributions. Tooltips include genre so viewers can inspect the genre context without overloading the chart visually.
               </p>
             </section>
+
 
             <section>
               <h2>Visualization 3: Regional Sales vs. Platform</h2>
 
               <p><strong>Questions:</strong></p>
               <ul>
-                <li>Do players in different regions prefer different platforms?</li>
-                <li>Which platforms are strongest in North America, Europe, and Japan?</li>
+                <li>For each platform, how do total sales compare across regions (NA, EU, JP, Other)?</li>
+                <li>Which platforms show the strongest regional skew (one region making up most of the platform’s sales)?</li>
               </ul>
 
               <div class="viz-section">
@@ -156,24 +162,26 @@
               </div>
 
               <p><strong>Reflection:</strong>
-                Regional variation is clear: some platforms perform far better in specific
-                markets, reflecting cultural familiarity, localization, and historical brand
-                presence. Japan shows different preferences compared to Western markets.
+                The visualization makes regional preferences easy to spot: some platforms have much larger totals in North America and
+                Europe, while others show relatively stronger performance in Japan. This indicates that platform popularity is not
+                uniform globally and is shaped by regional market differences.
               </p>
 
-              <p><strong>Design Choice:</strong>
-                Grouped bars allow direct comparison between regions while maintaining
-                platform-level detail.
+              <p><strong>Design choices:</strong>
+                I used a bar chart with region encoded by color because it supports direct comparison of regional totals
+                within the same platform. The tooltip provides precise sales totals by region, and the consistent platform x-axis makes it
+                easy to scan across systems.
               </p>
             </section>
 
+
             <section>
-              <h2>Visualization 4: Visual Story — Market Concentration of Publishers</h2>
+              <h2>Visualization 4: What Genre Each Region Prefers</h2>
 
               <p><strong>Questions:</strong></p>
               <ul>
-                <li>Is the video game industry dominated by a small number of publishers?</li>
-                <li>How much of total sales come from leading companies?</li>
+                <li>Within each region (NA, EU, JP, Other), which genres make up the largest share of total sales?</li>
+                <li>How does the genre mix differ between regions (e.g., does Japan emphasize different genres than NA/EU)?</li>
               </ul>
 
               <div class="viz-section">
@@ -183,19 +191,22 @@
               </div>
 
               <p><strong>Reflection:</strong>
-                A small group of major publishers accounts for a disproportionately large
-                share of global sales. This demonstrates the blockbuster economy of gaming,
-                where recognizable franchises and strong marketing create repeated success.
+                This view tells a regional “taste” story: each region has a distinct genre composition, with some genres taking a much
+                larger portion of the sales in specific markets. Comparing the donut charts side-by-side shows that regional demand is
+                not identical, and certain genres appear more dominant in some regions than others.
               </p>
 
-              <p><strong>Design Choice:</strong>
-                A ranked comparison emphasizes hierarchy and makes market dominance easier
-                to interpret.
+              <p><strong>Design choices:</strong>
+                I chose donut charts because the goal is to compare proportions (genre share)
+                within each region rather than just totals. Faceting creates small multiples that make side-by-side comparison easy.
+                The donut form highlights composition clearly, and tooltips provide exact sales amounts for each genre segment.
               </p>
             </section>
 
         </div>
 
-        <script src="vis2.js"></script>
-    </body>
+    </div>
+
+    <script src="vis2.js"></script>
+  </body>
 </html>

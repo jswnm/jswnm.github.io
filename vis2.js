@@ -1,4 +1,5 @@
 const embedOptions = { actions: false, renderer: "canvas" };
+
 const gameConfig = {
   background: "#0b0f1a",
   axis: {
@@ -20,183 +21,151 @@ const gameConfig = {
   view: { stroke: "#00e5ff" }
 };
 
-/* -----------------------------
-   Visualization 1 — Global Sales by Genre
-   Sorted Bar Chart (Stable Version)
------------------------------ */
-const vis1 = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+const dataUrl = "dataset/videogames_long.csv";
 
-  config: gameConfig,
+/* Visualization 1 */
+const vis1 = vl
+  .markBar({ cornerRadiusEnd: 6 })
+  .data(dataUrl)
+  .title("Global Sales by Genre and Platform")
+  .config(gameConfig)
+  .encode(
+    vl.y().fieldN("genre").sort("-x").title("Genre").axis({ labelLimit: 200 }),
+    vl.x()
+      .fieldQ("global_sales")
+      .aggregate("sum")
+      .title("Total Global Sales (Millions)"),
+    vl.color().fieldN("platform").title("Platform"),
+    vl.tooltip([
+      vl.tooltip().fieldN("genre").title("genre"),
+      vl.tooltip().fieldN("platform").title("platform"),
+      vl.tooltip()
+        .fieldQ("global_sales")
+        .aggregate("sum")
+        .title("Sales (Millions)")
+    ])
+  )
+  .width(650)
+  .height({ step: 30 });
 
-  data: { url: "dataset/videogames_long.csv" },
+vegaEmbed("#view1", vis1.toSpec(), { actions: false });
 
-  title: "Global Sales by Genre",
 
-  mark: {
-    type: "bar",
-    cornerRadiusEnd: 6
-  },
+/* Visualization 2 */
+const vis2 = vl
+  .markArea({ line: true, interpolate: "monotone" })
+  .data(dataUrl)
+  .title("Video Game Sales Over Time by Platform and Genre")
+  .config(gameConfig)
+  .autosize({ type: "fit", contains: "padding" })
+  .encode(
+    vl.x().fieldO("year").title("Release Year"),
+    vl.y()
+      .fieldQ("global_sales")
+      .aggregate("sum")
+      .stack("zero")
+      .title("Sales (Millions)"),
+    vl.color().fieldN("platform").title("Platform"),
+    vl.detail().fieldN("genre"),
+    vl.tooltip([
+      vl.tooltip().fieldO("year").title("year"),
+      vl.tooltip().fieldN("platform").title("platform"),
+      vl.tooltip().fieldN("genre").title("genre"),
+      vl.tooltip()
+        .fieldQ("global_sales")
+        .aggregate("sum")
+        .title("Sales (Millions)")
+    ])
+  )
+  .height(500);
 
-  encoding: {
-    y: {
-      field: "genre",
-      type: "nominal",
+vegaEmbed("#view2", vis2.toSpec(), embedOptions);
 
-      // ✅ Sort by the aggregated value directly (this is the SAFE way)
-      sort: "-x",
 
-      title: "Genre",
-      axis: { labelLimit: 200 }
-    },
+/* Visualization 3 */
+const vis3 = vl
+  .markBar({ cornerRadiusTopLeft: 4, cornerRadiusTopRight: 4 })
+  .data(dataUrl)
+  .title("Regional Platform Popularity")
+  .config(gameConfig)
+  .autosize({ type: "fit", contains: "padding" })
+  .encode(
+    vl.x().fieldN("platform").title("Platform"),
+    vl.y()
+      .fieldQ("sales_amount")
+      .aggregate("sum")
+      .title("Sales (Millions)"),
+    vl.color()
+      .fieldN("sales_region")
+      .title("Region")
+      .scale({ scheme: "category10" }),
+    vl.tooltip([
+      vl.tooltip().fieldN("platform").title("platform"),
+      vl.tooltip().fieldN("sales_region").title("region"),
+      vl.tooltip()
+        .fieldQ("sales_amount")
+        .aggregate("sum")
+        .title("Sales (Millions)")
+    ])
+  )
+  .height(400);
 
-    x: {
-      aggregate: "sum",
-      field: "global_sales",
-      type: "quantitative",
-      title: "Total Global Sales (Millions)"
-    },
+vegaEmbed("#view3", vis3.toSpec(), embedOptions);
 
-    color: {
-      field: "platform",
-      type: "nominal",
-      title: "Platform"
-    },
 
-    tooltip: [
-      { field: "genre", type: "nominal" },
-      { field: "platform", type: "nominal" },
-      { aggregate: "sum", field: "global_sales", type: "quantitative", title: "Sales" }
-    ]
-  },
+/* Visualization 4 */
 
-  // ✅ Use fixed width — "container" breaks in many setups
-  width: 620,
-
-  // height step prevents squishing
-  height: { step: 26 }
+const vis4Config = {
+  ...gameConfig,
+  view: { stroke: null }
 };
 
-vegaEmbed("#view1", vis1, { actions: false });
+function donutForRegion(regionKey, titleText) {
+  return vl
+    .markArc({
+      innerRadius: 30,
+      outerRadius: 80
+    })
+    .data({ url: dataUrl })
+    .transform(vl.filter(`datum.sales_region === '${regionKey}'`))
+    .title({
+      text: titleText,
+      color: "#ffffff",
+      font: "monospace",
+      anchor: "middle"
+    })
+    .encode(
+      vl.theta().fieldQ("sales_amount").aggregate("sum"),
+      vl.color().fieldN("genre").title("Genre"),
+      vl.tooltip([
+        vl.tooltip().fieldN("sales_region").title("Region"),
+        vl.tooltip().fieldN("genre").title("Genre"),
+        vl.tooltip().fieldQ("sales_amount").aggregate("sum").title("Sales (Millions)")
+      ])
+    )
+    .width(150)
+    .height(220);
+}
 
-/* -----------------------------
-   Visualization 2 — Stacked area
------------------------------ */
-const vis2 = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  data: { url: "dataset/videogames_long.csv" },
-  config: gameConfig,
-  autosize: { type: "fit", contains: "padding" },
-  title: "Video Game Sales Over Time by Platform & Genre",
-  mark: { type: "area", line: true, interpolate: "monotone" },
-  encoding: {
-    x: { field: "year", type: "ordinal", title: "Release Year" },
-    y: { aggregate: "sum", field: "global_sales", type: "quantitative", stack: "zero", title: "Sales (Millions)" },
-    color: { field: "platform", type: "nominal", title: "Platform" },
-    detail: { field: "genre" },
-    tooltip: [
-      { field: "year", type: "ordinal" },
-      { field: "platform", type: "nominal" },
-      { field: "genre", type: "nominal" },
-      { aggregate: "sum", field: "global_sales", type: "quantitative", title: "Sales (Millions)" }
-    ]
-  },
-  height: 500
-};
-vegaEmbed("#view2", vis2, embedOptions);
+const dNA = donutForRegion("na_sales", "North America");
+const dEU = donutForRegion("eu_sales", "Europe");
+const dJP = donutForRegion("jp_sales", "Japan");
+const dOT = donutForRegion("other_sales", "Other");
 
-/* -----------------------------
-   Visualization 3 — Grouped bars
------------------------------ */
-const vis3 = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  data: { url: "dataset/videogames_long.csv" },
-  config: gameConfig,
-  autosize: { type: "fit", contains: "padding" },
-  title: "Regional Platform Popularity",
-  mark: { type: "bar", cornerRadiusTopLeft: 4, cornerRadiusTopRight: 4 },
-  encoding: {
-    x: { field: "platform", type: "nominal", title: "Platform" },
-    y: { aggregate: "sum", field: "sales_amount", type: "quantitative", title: "Sales (Millions)" },
-    color: { field: "sales_region", type: "nominal", scale: { scheme: "category10" }, title: "Region" },
-    tooltip: [
-      { field: "platform", type: "nominal" },
-      { field: "sales_region", type: "nominal" },
-      { aggregate: "sum", field: "sales_amount", type: "quantitative", title: "Sales (Millions)" }
-    ]
-  },
-  height: 400
-};
-vegaEmbed("#view3", vis3, embedOptions);
+// horizontal layout
+const vis4 = vl
+  .hconcat(dNA, dEU, dJP, dOT)
+  .title({
+    text: "What Genre Each Region Prefers",
+    anchor: "middle",
+    color: "#00e5ff",
+    font: "monospace",
+    fontSize: 18,
+    offset: 25
+  })
+  .config(vis4Config);
 
-/* -----------------------------
-   Visualization 4 — Stacked bars
------------------------------ */
-const vis4 = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+// render
+vegaEmbed("#view4", vis4.toSpec(), embedOptions).catch(console.error);
 
-  config: {
-    ...gameConfig,
 
-    // Make the region labels white (this was the original request)
-    header: {
-      labelColor: "#ffffff",
-      titleColor: "#ffffff",
-      labelFont: "monospace",
-      titleFont: "monospace"
-    },
-
-    // Remove extra spacing that was pushing charts out
-    view: { stroke: null }
-  },
-
-  data: { url: "dataset/videogames_long.csv" },
-
-  title: "Genre Contribution by Region",
-
-  facet: {
-    field: "sales_region",
-    type: "nominal",
-    columns: 3   // keeps them in one row
-  },
-
-  spec: {
-    width: 180,   // KEY: fixed internal size (prevents overflow)
-    height: 180,
-
-    mark: {
-      type: "arc",
-      innerRadius: 50,
-      outerRadius: 80,
-      stroke: "#0b0f1a",
-      strokeWidth: 2
-    },
-
-    encoding: {
-      theta: {
-        aggregate: "sum",
-        field: "sales_amount",
-        type: "quantitative"
-      },
-
-      color: {
-        field: "genre",
-        type: "nominal",
-        title: "Genre"
-      },
-
-      tooltip: [
-        { field: "sales_region", title: "Region" },
-        { field: "genre", title: "Genre" },
-        {
-          aggregate: "sum",
-          field: "sales_amount",
-          type: "quantitative",
-          title: "Sales (Millions)"
-        }
-      ]
-    }
-  }
-};
-
-vegaEmbed("#view4", vis4, embedOptions);
